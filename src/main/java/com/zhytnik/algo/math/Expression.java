@@ -1,12 +1,12 @@
 package com.zhytnik.algo.math;
 
-import java.util.Set;
+import java.util.List;
 
 public interface Expression {
 
     double value();
 
-    Set<Variable> variables();
+    List<Variable> variables();
 
     String writtenFormat();
 

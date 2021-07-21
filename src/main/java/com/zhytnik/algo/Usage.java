@@ -8,21 +8,22 @@ import java.util.Set;
 
 //TODO: adaptive error
 //TODO: rename to complexity
-//TODO: recursive elimination
+//TODO: how to display
+// division, on the left is greater
 public class Usage {
 
     public static void main(String[] args) {
-        var allVariables = new DefaultVariableSearch().search(Usage.class.getResourceAsStream("/sub.json"));
-        var desiredVariables = desiredVariables(allVariables, Set.of("BasicEPS"));
-        var calculator = new Calculator(allVariables, 4, 0.000001, 0.000000001);
+        var allVariables = new DefaultVariableSearch().search(Usage.class.getResourceAsStream("/source.json"));
+        var desiredVariables = desiredVariables(allVariables, Set.of("result"));
+        var calculator = new Calculator(allVariables, 3, 0.0004, 0.0006);
 
         for (var desired : desiredVariables) {
             var expressions = calculator.calculate(desired);
             System.out.println("Total: " + expressions.size());
 
-            for (var expression : expressions) {
-                System.out.println(desired + "=" + expression + " = " + expression.value());
-            }
+//            for (var expression : expressions) {
+//                System.out.println(desired + "=" + expression + " = " + expression.value());
+//            }
         }
     }
 

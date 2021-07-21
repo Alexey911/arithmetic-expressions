@@ -1,6 +1,7 @@
 package com.zhytnik.algo;
 
 import com.zhytnik.algo.error.AbsoluteErrorThreshold;
+import com.zhytnik.algo.error.BiDoublePredicate;
 import com.zhytnik.algo.error.RelativeErrorThreshold;
 import com.zhytnik.algo.math.Expression;
 import com.zhytnik.algo.math.Variable;
@@ -20,19 +21,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.function.BiPredicate;
+import java.util.stream.Collectors;
 
 public class Calculator {
 
     private static final int OPS_PER_SEC = 33_000_000;
 
-    private final Set<Expression> variables;
-    private final BiPredicate<Double, Double> equal;
+    private final int complexity;
+    private final Set<Variable> variables;
+    private final BiDoublePredicate equal;
 
     private final Transformation mathExpressions;
     private final Transformation uniqueExpressions;
-    private final Transformation variableElimination;
     private final Transformation normalizedFiltration;
+    private final VariableElimination variableElimination;
     private final GroupTransformation<Set<Expression>, Set<Expression>> combinations;
     private final GroupTransformation<Collection<Expression>, List<Expression>> permutations;
 
@@ -40,16 +42,15 @@ public class Calculator {
         if (variables.size() <= 1) {
             throw new IllegalArgumentException("Value source should have at least two elements! Actual size is " + variables.size());
         }
+        this.complexity = complexity;
         this.variables = new HashSet<>(variables);
         this.permutations = new Permutations();
         this.mathExpressions = new MathExpressions();
         this.combinations = new Combinations(complexity);
         this.uniqueExpressions = new UniqueExpressions();
         this.normalizedFiltration = new AstFiltration(new AstNormalization());
-        this.equal = new RelativeErrorThreshold(relativeError).and(new AbsoluteErrorThreshold(absoluteAccuracy));
+        this.equal = new AbsoluteErrorThreshold(absoluteAccuracy).and(new RelativeErrorThreshold(relativeError));
         this.variableElimination = new VariableElimination(equal);
-
-        System.out.println("ETC: " + totalExpressions(variables.size(), complexity) / OPS_PER_SEC + "s");
     }
 
     public List<Expression> calculate(Variable var) {
@@ -65,23 +66,26 @@ public class Calculator {
 
     private List<Expression> expressions(Variable var) {
         List<Expression> valid = new ArrayList<>();
+        Set<Expression> variableSubSet = variables.stream().filter(variable -> variable.value() != var.value()).collect(Collectors.toSet());
 
-        variables.remove(var);
+        System.out.println("ETC: " + totalExpressions(variableSubSet.size(), complexity) / OPS_PER_SEC + "s");
 
+        long total = 0;
         //TODO: parallel execution
-        try {
-            for (var combination : combinations.apply(variables)) {
-                for (var permutation : permutations.apply(combination)) {
-                    for (var expression : mathExpressions.apply(permutation)) {
-                        validate(valid, expression, var);
-                    }
+        for (var combination : combinations.apply(variableSubSet)) {
+            for (var permutation : permutations.apply(combination)) {
+                for (var expression : mathExpressions.apply(permutation)) {
+//                    total++;
+                    validate(valid, expression, var);
                 }
             }
-        } finally {
-            variables.add(var);
         }
 
+        System.out.println(total);
+
+        long now = System.currentTimeMillis();
         var unique = uniqueExpressions.apply(valid);
+        System.out.println(TimeUnit.MILLISECONDS.toMicros(System.currentTimeMillis() - now));
         valid.clear();
 
         var significant = variableElimination.apply(unique);

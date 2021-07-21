@@ -1,6 +1,10 @@
 package com.zhytnik.algo.math;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
+
+import static java.util.Collections.singletonList;
 
 public final class Variable implements Expression {
 
@@ -21,8 +25,8 @@ public final class Variable implements Expression {
     }
 
     @Override
-    public Set<Variable> variables() {
-        return Set.of(this);
+    public List<Variable> variables() {
+        return singletonList(this);
     }
 
     @Override

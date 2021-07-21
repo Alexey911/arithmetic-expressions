@@ -2,15 +2,13 @@ package com.zhytnik.algo.error;
 
 import lombok.AllArgsConstructor;
 
-import java.util.function.BiPredicate;
-
 @AllArgsConstructor
-public class AbsoluteErrorThreshold implements BiPredicate<Double, Double> {
+public final class AbsoluteErrorThreshold implements BiDoublePredicate {
 
     private final double absoluteError;
 
     @Override
-    public boolean test(Double actual, Double expected) {
+    public boolean test(double actual, double expected) {
         return Math.abs(actual - expected) <= absoluteError;
     }
 }

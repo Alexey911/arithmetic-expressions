@@ -1,9 +1,9 @@
 package com.zhytnik.algo.math;
 
-import com.google.common.collect.Sets;
 import lombok.Getter;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BinaryOperation implements Expression {
 
@@ -33,8 +33,15 @@ public class BinaryOperation implements Expression {
     }
 
     @Override
-    public Set<Variable> variables() {
-        return Sets.union(left.variables(), right.variables());
+    public List<Variable> variables() {
+        var lefts = left.variables();
+        var rights = right.variables();
+
+        List<Variable> target = new ArrayList<>(lefts.size() + rights.size());
+
+        target.addAll(lefts);
+        target.addAll(rights);
+        return target;
     }
 
     @Override
