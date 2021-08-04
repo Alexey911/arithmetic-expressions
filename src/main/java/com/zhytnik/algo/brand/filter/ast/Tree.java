@@ -1,6 +1,6 @@
-package com.zhytnik.algo.transform.ast;
+package com.zhytnik.algo.brand.filter.ast;
 
-import com.zhytnik.algo.math.Expression;
+import com.zhytnik.algo.brand.data.Expression;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

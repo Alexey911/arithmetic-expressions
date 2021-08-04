@@ -1,11 +1,14 @@
-package com.zhytnik.algo.math;
+package com.zhytnik.algo.brand.data;
 
 import lombok.Getter;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
-public class BinaryOperation implements Expression {
+import static java.util.stream.Collectors.toList;
+
+public final class BinaryOperation implements Expression {
 
     private final double value;
 
@@ -18,7 +21,7 @@ public class BinaryOperation implements Expression {
     @Getter
     private final BinaryOperator operator;
 
-    private int hash = 0;
+    private int hash;
 
     public BinaryOperation(Expression left, Expression right, BinaryOperator operator) {
         this.left = left;
@@ -28,35 +31,40 @@ public class BinaryOperation implements Expression {
     }
 
     @Override
+    public boolean isUnary() {
+        return false;
+    }
+
+    @Override
     public double value() {
         return value;
     }
 
     @Override
     public List<Variable> variables() {
-        var lefts = left.variables();
-        var rights = right.variables();
-
-        List<Variable> target = new ArrayList<>(lefts.size() + rights.size());
-
-        target.addAll(lefts);
-        target.addAll(rights);
-        return target;
+        return Stream.concat(
+                left.variables().stream(),
+                right.variables().stream()
+        ).collect(toList());
     }
 
     @Override
-    public String writtenFormat() {
+    public Expression recalculateWith(Map<Variable, Variable> replacements) {
+        return new BinaryOperation(
+                left.recalculateWith(replacements),
+                right.recalculateWith(replacements),
+                operator
+        );
+    }
+
+    @Override
+    public String formatted() {
         return operator.writing(left, right);
     }
 
     @Override
-    public boolean isUnary() {
-        return false;
-    }
-
-    @Override
     public String toString() {
-        return writtenFormat();
+        return formatted();
     }
 
     @Override
@@ -77,7 +85,7 @@ public class BinaryOperation implements Expression {
     public int hashCode() {
         int h = hash;
         if (h == 0) {
-            hash = h = 31 * (left.hashCode() ^ right.hashCode()) + operator.hashCode();
+            hash = h = (31 * left.hashCode() + right.hashCode()) ^ operator.hashCode();
         }
         return h;
     }

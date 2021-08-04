@@ -1,9 +1,9 @@
-package com.zhytnik.algo.transform.ast;
+package com.zhytnik.algo.brand.filter.ast;
 
-import com.zhytnik.algo.math.BinaryOperation;
-import com.zhytnik.algo.math.BinaryOperator;
-import com.zhytnik.algo.math.Expression;
-import com.zhytnik.algo.math.Variable;
+import com.zhytnik.algo.brand.data.BinaryOperation;
+import com.zhytnik.algo.brand.data.BinaryOperator;
+import com.zhytnik.algo.brand.data.Expression;
+import com.zhytnik.algo.brand.data.Variable;
 import lombok.AllArgsConstructor;
 
 import static java.util.Objects.nonNull;
@@ -43,7 +43,11 @@ public final class Node {
 
     @Override
     public String toString() {
-        return isVariable() ? variable.writtenFormat() : "(" + left.toString() + ")" + operator.getSymbol() + "(" + right.toString() + ")";
+        return isVariable() ? variable.formatted() : format(left) + operator.getDisplay() + format(right);
+    }
+
+    private String format(Node node) {
+        return node.isVariable() ? node.toString() : "(" + node.toString() + ")";
     }
 
     public Expression toExpression() {
@@ -90,7 +94,7 @@ public final class Node {
 
     private static void print(Node node, StringBuilder target) {
         if (node.isVariable()) {
-            target.append(node.variable.writtenFormat());
+            target.append(node.variable.formatted());
         } else {
             print(node.left, target);
             print(node.right, target);

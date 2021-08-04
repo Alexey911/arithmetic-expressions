@@ -1,14 +1,14 @@
-package com.zhytnik.algo.error;
+package com.zhytnik.algo.brand.threshold;
 
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public final class RelativeErrorThreshold implements BiDoublePredicate {
+public final class RelativeErrorThreshold implements Threshold {
 
     private final double relativeError;
 
     @Override
-    public boolean test(double actual, double expected) {
+    public boolean isAcceptable(double actual, double expected) {
         return Math.abs((actual - expected) / expected) <= relativeError;
     }
 }

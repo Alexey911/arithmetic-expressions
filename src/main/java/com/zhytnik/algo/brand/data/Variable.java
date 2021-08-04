@@ -1,15 +1,14 @@
-package com.zhytnik.algo.math;
+package com.zhytnik.algo.brand.data;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import static java.util.Collections.singletonList;
 
 public final class Variable implements Expression {
 
-    protected final String name;
-    protected final double value;
+    private final String name;
+    private final double value;
 
     public Variable(String name, double value) {
         if (name.isBlank()) {
@@ -30,7 +29,12 @@ public final class Variable implements Expression {
     }
 
     @Override
-    public String writtenFormat() {
+    public Expression recalculateWith(Map<Variable, Variable> replacements) {
+        return replacements.getOrDefault(this, this);
+    }
+
+    @Override
+    public String formatted() {
         return name;
     }
 
