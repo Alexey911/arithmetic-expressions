@@ -7,7 +7,7 @@ import com.zhytnik.algo.brand.data.Variable;
 
 public class Data {
 
-    public static Variable exp(String name) {
+    public static Variable var(String name) {
         return new Variable(name, 0d);
     }
 
@@ -32,6 +32,6 @@ public class Data {
     }
 
     private static Expression exp(Object v) {
-        return v instanceof Expression ? (Expression) v : exp(v.toString());
+        return v instanceof Expression ? (Expression) v : var(v.toString());
     }
 }

@@ -35,6 +35,14 @@ public final class Node {
         right = tmp;
     }
 
+    public void setLeft(Node left) {
+        this.left = left;
+    }
+
+    public void setRight(Node right) {
+        this.right = right;
+    }
+
     StringBuilder description() {
         var sb = new StringBuilder();
         print(this, sb);
