@@ -29,7 +29,7 @@ public final class Variable implements Expression {
     }
 
     @Override
-    public Expression recalculateWith(Map<Variable, Variable> replacements) {
+    public Expression recalculateWith(Map<Expression, Expression> replacements) {
         return this;
     }
 

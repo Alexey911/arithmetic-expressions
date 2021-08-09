@@ -31,13 +31,13 @@ public final class BinaryOperation implements Expression {
     }
 
     @Override
-    public boolean isUnary() {
-        return false;
+    public double value() {
+        return value;
     }
 
     @Override
-    public double value() {
-        return value;
+    public boolean isUnary() {
+        return false;
     }
 
     @Override
@@ -49,26 +49,26 @@ public final class BinaryOperation implements Expression {
     }
 
     @Override
-    public Expression recalculateWith(Map<Variable, Variable> replacements) {
-        return new BinaryOperation(
-                recalculate(left, replacements),
-                recalculate(right, replacements),
-                operator
-        );
-    }
-
-    private Expression recalculate(Expression source, Map<Variable, Variable> replacements) {
-        if (!source.isUnary()) {
-            return source.recalculateWith(replacements);
-        }
-
-        var variable = (Variable) source;
-        return replacements.getOrDefault(variable, variable);
+    public String formatted() {
+        return operator.writing(left, right);
     }
 
     @Override
-    public String formatted() {
-        return operator.writing(left, right);
+    public Expression recalculateWith(Map<Expression, Expression> replacements) {
+        var modifiedLeft = recalculate(left, replacements);
+        var modifiedRight = recalculate(right, replacements);
+
+        if (modifiedLeft == left && modifiedRight == right) {
+            return this;
+        }
+        return new BinaryOperation(modifiedLeft, modifiedRight, operator);
+    }
+
+    private Expression recalculate(Expression source, Map<Expression, Expression> replacements) {
+        if (replacements.containsKey(source)) {
+            return replacements.get(source);
+        }
+        return source.recalculateWith(replacements);
     }
 
     @Override

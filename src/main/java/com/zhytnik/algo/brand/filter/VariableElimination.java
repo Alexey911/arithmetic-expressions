@@ -9,8 +9,7 @@ import lombok.AllArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.util.Collections.singletonMap;
+import java.util.Map;
 
 @AllArgsConstructor
 public final class VariableElimination implements Transformation {
@@ -104,7 +103,7 @@ public final class VariableElimination implements Transformation {
             return;
         }
 
-        var modified = source.recalculateWith(singletonMap(elimination, replacement));
+        var modified = source.recalculateWith(Map.of(elimination, replacement));
 
         if (equal.isAcceptable(modified.value(), original)) {
             invalid.increment();

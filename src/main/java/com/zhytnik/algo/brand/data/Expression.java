@@ -13,5 +13,5 @@ public interface Expression {
 
     List<Variable> variables();
 
-    Expression recalculateWith(Map<Variable, Variable> replacements);
+    Expression recalculateWith(Map<Expression, Expression> replacements);
 }
