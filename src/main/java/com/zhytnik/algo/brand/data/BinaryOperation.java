@@ -54,7 +54,7 @@ public final class BinaryOperation implements Expression {
     }
 
     @Override
-    public Expression recalculateWith(Map<Expression, Expression> replacements) {
+    public Expression recalculateWith(Map<? extends Expression, ? extends Expression> replacements) {
         var modifiedLeft = recalculate(left, replacements);
         var modifiedRight = recalculate(right, replacements);
 
@@ -64,7 +64,7 @@ public final class BinaryOperation implements Expression {
         return new BinaryOperation(modifiedLeft, modifiedRight, operator);
     }
 
-    private Expression recalculate(Expression source, Map<Expression, Expression> replacements) {
+    private Expression recalculate(Expression source, Map<? extends Expression, ? extends Expression> replacements) {
         if (replacements.containsKey(source)) {
             return replacements.get(source);
         }
