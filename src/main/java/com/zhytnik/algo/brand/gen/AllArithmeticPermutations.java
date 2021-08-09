@@ -1,31 +1,31 @@
-package com.zhytnik.algo.transform;
+package com.zhytnik.algo.brand.gen;
 
-import com.zhytnik.algo.math.BinaryOperation;
-import com.zhytnik.algo.math.BinaryOperator;
-import com.zhytnik.algo.math.Expression;
+import com.zhytnik.algo.brand.data.BinaryOperation;
+import com.zhytnik.algo.brand.data.BinaryOperator;
+import com.zhytnik.algo.brand.data.Expression;
+import lombok.AllArgsConstructor;
 
-import java.util.Arrays;
 import java.util.List;
 
-public final class MathExpressions implements Transformation {
+@AllArgsConstructor
+public final class AllArithmeticPermutations {
 
     private static final int[] EXPECTED_SIZE = {0, 0, 4, 32, 320, 3584, 43_008, 540_672, 7_028_736};
 
     private static final BinaryOperator[] BINARY_OPERATORS = BinaryOperator.values();
+    private static final int BINARY_OPERATORS_LENGTH = BINARY_OPERATORS.length;
 
-    @Override
-    public long expectedCount(int size) {
-        return EXPECTED_SIZE[size];
+    public static long outputSize(int inputSize) {
+        return EXPECTED_SIZE[inputSize];
     }
 
-    @Override
-    public List<Expression> apply(List<Expression> source) {
-        int count = source.size();
+    public static Expression[] computeAllPermutations(List<Expression> source) {
+        int total = source.size();
 
-        if (count < 2 || count > 8) {
-            throw new IllegalArgumentException("Source size should have value from [2, 8] range! Actual is " + count);
+        if (total < 2 || total > 8) {
+            throw new IllegalArgumentException("Source size should have value from [2, 8] range! Actual is " + total);
         }
-        return Arrays.asList(expressions(source, 0, count));
+        return expressions(source, 0, total);
     }
 
     private static Expression[] expressions(List<Expression> source, int from, int to) {
@@ -36,14 +36,17 @@ public final class MathExpressions implements Transformation {
         } else if (total == 2) {
             return allBiCombinations(source.get(from), source.get(from + 1));
         }
+        return fill(source, from, to, total);
+    }
 
+    private static Expression[] fill(List<Expression> source, int from, int to, int total) {
         Expression[] result = new Expression[EXPECTED_SIZE[total]];
 
         for (int i = 1, offset = 0; i < total; i++) {
             var left = expressions(source, from, from + i);
             var right = expressions(source, from + i, to);
 
-            fillByAllBiCombinations(result, offset, left, right);
+            fillByAllBiCombinations(result, left, right, offset);
             offset += BINARY_OPERATORS.length * left.length * right.length;
         }
         return result;
@@ -58,17 +61,16 @@ public final class MathExpressions implements Transformation {
         };
     }
 
-    private static void fillByAllBiCombinations(Expression[] target, int offset, Expression[] lefts, Expression[] rights) {
-        int leftSize = lefts.length, rightSize = rights.length;
-
-        for (int k = 0, ops = BINARY_OPERATORS.length; k < ops; k++) {
+    private static void fillByAllBiCombinations(Expression[] target, Expression[] lefts, Expression[] rights, int offset) {
+        for (int k = 0; k < BINARY_OPERATORS_LENGTH; k++) {
             var op = BINARY_OPERATORS[k];
+            int leftSize = lefts.length, rightSize = rights.length, val = offset + k * leftSize * rightSize;
 
             for (int i = 0; i < leftSize; i++) {
                 var left = lefts[i];
 
                 for (int j = 0; j < rightSize; j++) {
-                    target[offset + (k * leftSize * rightSize) + (i * rightSize) + j] = new BinaryOperation(left, rights[j], op);
+                    target[val + i * rightSize + j] = new BinaryOperation(left, rights[j], op);
                 }
             }
         }

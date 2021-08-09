@@ -13,20 +13,20 @@ final class BinaryGrouping implements UnaryOperator<Tree> {
 
     @Override
     public Tree apply(Tree tree) {
-        tryToTrim(tree.root);
+        traverse(tree.root);
         return tree;
     }
 
-    private void tryToTrim(Node node) {
+    private void traverse(Node node) {
         if (node.left.isOperation()) {
-            tryToTrim(node.left);
+            traverse(node.left);
 
             if (node.right.isVariable() && node.variables() > 3) {
                 tryToTrimLeftSide(node);
             }
         }
         if (node.right.isOperation()) {
-            tryToTrim(node.right);
+            traverse(node.right);
 
             if (node.left.isVariable() && node.variables() > 3) {
                 tryToTrimRightSide(node);

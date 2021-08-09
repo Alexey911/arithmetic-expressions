@@ -8,7 +8,10 @@ import java.util.function.UnaryOperator;
 
 import static com.zhytnik.algo.brand.data.BinaryOperator.SUBTRACTION;
 
-final class CommutativeSorting implements UnaryOperator<Tree> {
+/**
+ * Groups expressions to the groups of the maximum possible size and sorts them according to their sizes and variables' names.
+ */
+final class GroupAndSort implements UnaryOperator<Tree> {
 
     @Override
     public Tree apply(Tree tree) {

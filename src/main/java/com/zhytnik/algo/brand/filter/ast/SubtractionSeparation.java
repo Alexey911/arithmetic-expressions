@@ -5,20 +5,23 @@ import java.util.function.UnaryOperator;
 import static com.zhytnik.algo.brand.data.BinaryOperator.ADDITION;
 import static com.zhytnik.algo.brand.data.BinaryOperator.SUBTRACTION;
 
+/**
+ * Tries to move subtractions out of other operations.
+ */
 final class SubtractionSeparation implements UnaryOperator<Tree> {
 
     @Override
     public Tree apply(Tree tree) {
-        tryToReplaceSubByAdd(tree.root);
+        travers(tree.root);
         return tree;
     }
 
-    private void tryToReplaceSubByAdd(Node node) {
+    private void travers(Node node) {
         if (node.left.isOperation()) {
-            tryToReplaceSubByAdd(node.left);
+            travers(node.left);
         }
         if (node.right.isOperation()) {
-            tryToReplaceSubByAdd(node.right);
+            travers(node.right);
         }
 
         if (node.operator == SUBTRACTION && node.left.operator == SUBTRACTION && node.right.operator == SUBTRACTION) {

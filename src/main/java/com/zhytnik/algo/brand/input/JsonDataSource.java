@@ -1,10 +1,10 @@
-package com.zhytnik.algo.data;
+package com.zhytnik.algo.brand.input;
 
 import com.fasterxml.jackson.core.json.JsonReadFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.zhytnik.algo.math.Variable;
+import com.zhytnik.algo.brand.data.Variable;
 import lombok.SneakyThrows;
 
 import java.io.InputStream;
@@ -14,11 +14,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class DefaultVariableSearch implements VariableSearch {
+public class JsonDataSource implements VariableDataSource {
 
     @Override
     @SneakyThrows
-    public Set<Variable> search(InputStream resource) {
+    public Set<Variable> variables(InputStream resource) {
         ObjectMapper objectMapper = JsonMapper.builder()
                 .enable(JsonReadFeature.ALLOW_NON_NUMERIC_NUMBERS)
                 .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
