@@ -30,7 +30,7 @@ public final class Variable implements Expression {
 
     @Override
     public Expression recalculateWith(Map<Variable, Variable> replacements) {
-        return replacements.getOrDefault(this, this);
+        return this;
     }
 
     @Override

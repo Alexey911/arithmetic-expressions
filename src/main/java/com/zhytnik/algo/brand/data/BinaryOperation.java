@@ -51,10 +51,19 @@ public final class BinaryOperation implements Expression {
     @Override
     public Expression recalculateWith(Map<Variable, Variable> replacements) {
         return new BinaryOperation(
-                left.recalculateWith(replacements),
-                right.recalculateWith(replacements),
+                recalculate(left, replacements),
+                recalculate(right, replacements),
                 operator
         );
+    }
+
+    private Expression recalculate(Expression source, Map<Variable, Variable> replacements) {
+        if (!source.isUnary()) {
+            return source.recalculateWith(replacements);
+        }
+
+        var variable = (Variable) source;
+        return replacements.getOrDefault(variable, variable);
     }
 
     @Override
