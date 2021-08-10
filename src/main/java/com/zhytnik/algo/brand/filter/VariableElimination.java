@@ -22,6 +22,7 @@ public final class VariableElimination implements Transformation {
     private final Threshold valueThreshold;
     private final Threshold targetThreshold;
 
+    //TODO(Zhytnik): add precision customization
     public VariableElimination(int complexity, Threshold targetThreshold) {
         this(complexity, targetThreshold, new AbsoluteErrorThreshold(DEFAULT_VALUE_PRECISION));
     }

@@ -8,15 +8,15 @@ import lombok.AllArgsConstructor;
 import java.util.List;
 
 @AllArgsConstructor
-public final class AllArithmeticPermutations {
+final class AllArithmeticPermutations {
 
     private static final int[] EXPECTED_SIZE = {0, 0, 4, 32, 320, 3584, 43_008, 540_672, 7_028_736};
 
     private static final BinaryOperator[] BINARY_OPERATORS = BinaryOperator.values();
     private static final int BINARY_OPERATORS_LENGTH = BINARY_OPERATORS.length;
 
-    public static long outputSize(int inputSize) {
-        return EXPECTED_SIZE[inputSize];
+    public static long permutationsCount(int sourceSize) {
+        return EXPECTED_SIZE[sourceSize];
     }
 
     public static Expression[] computeAllPermutations(List<Expression> source) {

@@ -16,6 +16,7 @@ public final class AstNormalization implements UnaryOperator<Tree> {
         );
     }
 
+    //TODO(Zhytnik): add normalization customization
     @SafeVarargs
     public AstNormalization(UnaryOperator<Tree>... operators) {
         chain = operators;

@@ -17,6 +17,7 @@ public final class GroupAndSort implements UnaryOperator<Tree> {
 
     private final Comparator<Node> comparator;
 
+    //TODO(Zhytnik): add sort customization
     public GroupAndSort() {
         this(DefaultNodeComparator.INSTANCE);
     }
