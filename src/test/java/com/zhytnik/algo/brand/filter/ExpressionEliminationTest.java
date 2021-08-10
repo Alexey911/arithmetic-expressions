@@ -15,7 +15,7 @@ import static com.zhytnik.algo.brand.filter.ast.Data.multiple;
 import static com.zhytnik.algo.brand.filter.ast.Data.sub;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class VariableEliminationTest {
+class ExpressionEliminationTest {
 
     @ParameterizedTest
     @MethodSource("arguments")
@@ -30,7 +30,7 @@ class VariableEliminationTest {
     }
 
     Optional<Expression> eliminate(Expression source) {
-        var elimination = new VariableElimination(4, new AbsoluteErrorThreshold(0.1));
+        var elimination = new ExpressionElimination(4, new AbsoluteErrorThreshold(0.1));
         var result = elimination.apply(List.of(source));
 
         return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));

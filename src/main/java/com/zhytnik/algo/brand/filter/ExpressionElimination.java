@@ -1,0 +1,123 @@
+package com.zhytnik.algo.brand.filter;
+
+import com.zhytnik.algo.brand.compute.Transformation;
+import com.zhytnik.algo.brand.data.BinaryOperation;
+import com.zhytnik.algo.brand.data.Expression;
+import com.zhytnik.algo.brand.data.Variable;
+import com.zhytnik.algo.brand.settings.FeatureSettings;
+import com.zhytnik.algo.brand.threshold.Threshold;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+public final class ExpressionElimination implements Transformation {
+
+    private static final Variable ONE = new Variable("erased-value", 1.0d);
+    private static final Variable ZERO = new Variable("erased-value", 0.0d);
+
+    private final int complexity;
+    private final boolean groupElimination;
+    private final Threshold targetThreshold;
+    private final Threshold similarityThreshold;
+
+    public ExpressionElimination(int complexity, Threshold targetThreshold) {
+        this(complexity, targetThreshold, FeatureSettings.defaultSettings());
+    }
+
+    public ExpressionElimination(int complexity, Threshold targetThreshold, FeatureSettings settings) {
+        this(complexity, targetThreshold, settings.similarityThreshold(), settings.useGroupElimination());
+    }
+
+    public ExpressionElimination(int complexity, Threshold targetThreshold, Threshold similarityThreshold, boolean groupElimination) {
+        if (complexity <= 0) {
+            throw new IllegalArgumentException("Complexity should be positive! Actual is " + complexity);
+        }
+        this.complexity = complexity;
+        this.groupElimination = groupElimination;
+        this.targetThreshold = Objects.requireNonNull(targetThreshold);
+        this.similarityThreshold = Objects.requireNonNull(similarityThreshold);
+    }
+
+    @Override
+    public long complexity(int sourceSize) {
+        return Math.multiplyFull(complexity, sourceSize);
+    }
+
+    @Override
+    public List<Expression> apply(List<Expression> source) {
+        var invalid = new Counter();
+        var valuable = new ArrayList<Expression>();
+
+        for (var expression : source) {
+            traverse(expression, expression, invalid);
+
+            if (invalid.isZero()) {
+                valuable.add(expression);
+            } else {
+                invalid.reset();
+            }
+        }
+        return valuable;
+    }
+
+    private void traverse(Expression expression, Expression source, Counter invalid) {
+        if (!(expression instanceof BinaryOperation)) {
+            return;
+        }
+
+        var op = (BinaryOperation) expression;
+
+        if (op.getLeft().isUnary() || groupElimination) {
+            tryToEliminateLeft(op, op.getLeft(), source, invalid);
+        }
+
+        if (invalid.isZero() && (op.getRight().isUnary() || groupElimination)) {
+            tryToEliminateRight(op, op.getRight(), source, invalid);
+        }
+
+        if (invalid.isZero()) {
+            traverse(op.getLeft(), source, invalid);
+        }
+        if (invalid.isZero()) {
+            traverse(op.getRight(), source, invalid);
+        }
+    }
+
+    private void tryToEliminateLeft(BinaryOperation operation, Expression target, Expression source, Counter invalid) {
+        switch (operation.getOperator()) {
+            case MULTIPLICATION:
+                tryToEliminate(target, ONE, invalid, source);
+            case ADDITION:
+            case SUBTRACTION:
+            case DIVISION:
+                tryToEliminate(target, ZERO, invalid, source);
+        }
+    }
+
+    private void tryToEliminateRight(BinaryOperation operation, Expression target, Expression source, Counter invalid) {
+        switch (operation.getOperator()) {
+            case DIVISION:
+                tryToEliminate(target, ONE, invalid, source);
+                break;
+            case MULTIPLICATION:
+                tryToEliminate(target, ONE, invalid, source);
+            case ADDITION:
+            case SUBTRACTION:
+                tryToEliminate(target, ZERO, invalid, source);
+        }
+    }
+
+    private void tryToEliminate(Expression elimination, Expression replacement, Counter invalid, Expression source) {
+        if (similarityThreshold.isAcceptable(elimination.value(), replacement.value())) {
+            return;
+        }
+
+        var modified = source.recalculateWith(Map.of(elimination, replacement));
+
+        if (targetThreshold.isAcceptable(modified.value(), source.value())) {
+            invalid.increment();
+        }
+    }
+}

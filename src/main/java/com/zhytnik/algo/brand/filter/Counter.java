@@ -12,8 +12,8 @@ final class Counter {
         value++;
     }
 
-    public boolean isNonZero() {
-        return value != 0;
+    public boolean isZero() {
+        return value == 0;
     }
 
     public void reset() {
