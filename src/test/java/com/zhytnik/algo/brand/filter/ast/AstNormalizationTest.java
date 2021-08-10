@@ -7,10 +7,11 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
 
-import static com.zhytnik.algo.brand.filter.ast.Data.add;
-import static com.zhytnik.algo.brand.filter.ast.Data.div;
-import static com.zhytnik.algo.brand.filter.ast.Data.sub;
-import static com.zhytnik.algo.brand.filter.ast.Data.var;
+import static com.zhytnik.algo.brand.filter.ast.DataHelper.add;
+import static com.zhytnik.algo.brand.filter.ast.DataHelper.div;
+import static com.zhytnik.algo.brand.filter.ast.DataHelper.sub;
+import static com.zhytnik.algo.brand.filter.ast.DataHelper.tree;
+import static com.zhytnik.algo.brand.filter.ast.DataHelper.var;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class AstNormalizationTest {
@@ -24,7 +25,7 @@ class AstNormalizationTest {
     }
 
     String apply(Expression source) {
-        return new AstNormalization().apply(Data.tree(source)).toString();
+        return new AstNormalization().apply(tree(source)).toString();
     }
 
     static List<Arguments> arguments() {

@@ -7,8 +7,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
 
-import static com.zhytnik.algo.brand.filter.ast.Data.div;
-import static com.zhytnik.algo.brand.filter.ast.Data.multiple;
+import static com.zhytnik.algo.brand.filter.ast.DataHelper.div;
+import static com.zhytnik.algo.brand.filter.ast.DataHelper.multiple;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DivisionSimplificationTest {
@@ -22,7 +22,7 @@ class DivisionSimplificationTest {
     }
 
     String apply(Expression source) {
-        return new DivisionSimplification().apply(Data.tree(source)).toString();
+        return new DivisionSimplification().apply(DataHelper.tree(source)).toString();
     }
 
     static List<Arguments> arguments() {

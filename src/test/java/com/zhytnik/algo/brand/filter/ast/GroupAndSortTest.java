@@ -7,8 +7,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
 
-import static com.zhytnik.algo.brand.filter.ast.Data.add;
-import static com.zhytnik.algo.brand.filter.ast.Data.multiple;
+import static com.zhytnik.algo.brand.filter.ast.DataHelper.add;
+import static com.zhytnik.algo.brand.filter.ast.DataHelper.multiple;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class GroupAndSortTest {
@@ -22,7 +22,7 @@ class GroupAndSortTest {
     }
 
     String apply(Expression source) {
-        return new GroupAndSort().apply(Data.tree(source)).toString();
+        return new GroupAndSort().apply(DataHelper.tree(source)).toString();
     }
 
     static List<Arguments> arguments() {

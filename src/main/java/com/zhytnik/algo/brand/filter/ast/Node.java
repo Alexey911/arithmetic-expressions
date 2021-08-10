@@ -5,7 +5,7 @@ import com.zhytnik.algo.brand.data.BinaryOperator;
 import com.zhytnik.algo.brand.data.Expression;
 import com.zhytnik.algo.brand.data.Variable;
 
-final class Node {
+public final class Node {
 
     Node left;
     Node right;
@@ -42,7 +42,7 @@ final class Node {
         return sb;
     }
 
-    public Expression toExpression() {
+    Expression toExpression() {
         return toExpression(this);
     }
 

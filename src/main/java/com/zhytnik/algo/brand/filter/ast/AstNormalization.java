@@ -1,5 +1,8 @@
 package com.zhytnik.algo.brand.filter.ast;
 
+import com.zhytnik.algo.brand.settings.FeatureSettings;
+
+import java.util.Comparator;
 import java.util.function.UnaryOperator;
 
 public final class AstNormalization implements UnaryOperator<Tree> {
@@ -7,16 +10,24 @@ public final class AstNormalization implements UnaryOperator<Tree> {
     private final UnaryOperator<Tree>[] chain;
 
     public AstNormalization() {
+        this(FeatureSettings.defaultSettings());
+    }
+
+    public AstNormalization(FeatureSettings settings) {
+        this(settings.nodeComparator());
+    }
+
+    //TODO: check if binary grouping is worth it
+    public AstNormalization(Comparator<Node> nodeComparator) {
         this(
                 new BinaryGrouping(),
                 new SubtractionSeparation(),
                 new DivisionSimplification(),
                 new SignSimplification(),
-                new GroupAndSort()
+                new GroupAndSort(nodeComparator)
         );
     }
 
-    //TODO(Zhytnik): add normalization customization
     @SafeVarargs
     public AstNormalization(UnaryOperator<Tree>... operators) {
         chain = operators;
@@ -28,5 +39,9 @@ public final class AstNormalization implements UnaryOperator<Tree> {
             op.apply(tree);
         }
         return tree;
+    }
+
+    public int stepCount() {
+        return chain.length;
     }
 }

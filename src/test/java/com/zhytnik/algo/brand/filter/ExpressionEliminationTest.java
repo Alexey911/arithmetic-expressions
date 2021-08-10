@@ -9,10 +9,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.List;
 import java.util.Optional;
 
-import static com.zhytnik.algo.brand.filter.ast.Data.add;
-import static com.zhytnik.algo.brand.filter.ast.Data.div;
-import static com.zhytnik.algo.brand.filter.ast.Data.multiple;
-import static com.zhytnik.algo.brand.filter.ast.Data.sub;
+import static com.zhytnik.algo.brand.filter.ast.DataHelper.add;
+import static com.zhytnik.algo.brand.filter.ast.DataHelper.div;
+import static com.zhytnik.algo.brand.filter.ast.DataHelper.multiple;
+import static com.zhytnik.algo.brand.filter.ast.DataHelper.sub;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ExpressionEliminationTest {
@@ -54,7 +54,9 @@ class ExpressionEliminationTest {
 
                 Arguments.of(add(3, add(2, div(3, 1.001))), false),
                 Arguments.of(add(3, add(2, div(0.001, 1000))), false),
-                Arguments.of(add(3, add(2, div(3, 1.1))), true)
+                Arguments.of(add(3, add(2, div(3, 1.1))), true),
+
+                Arguments.of(add(10, sub(1, sub(1, 1))), false)
         );
     }
 }

@@ -1,6 +1,7 @@
 package com.zhytnik.algo.brand.filter.ast;
 
 import com.zhytnik.algo.brand.data.BinaryOperator;
+import com.zhytnik.algo.brand.settings.FeatureSettings;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -17,9 +18,12 @@ public final class GroupAndSort implements UnaryOperator<Tree> {
 
     private final Comparator<Node> comparator;
 
-    //TODO(Zhytnik): add sort customization
     public GroupAndSort() {
-        this(DefaultNodeComparator.INSTANCE);
+        this(FeatureSettings.defaultSettings());
+    }
+
+    public GroupAndSort(FeatureSettings settings) {
+        this(settings.nodeComparator());
     }
 
     public GroupAndSort(Comparator<Node> comparator) {

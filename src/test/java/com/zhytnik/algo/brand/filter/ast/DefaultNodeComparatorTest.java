@@ -7,7 +7,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.List;
 
 import static com.zhytnik.algo.brand.data.BinaryOperator.ADDITION;
-import static com.zhytnik.algo.brand.filter.ast.Data.var;
+import static com.zhytnik.algo.brand.filter.ast.DataHelper.var;
 import static com.zhytnik.algo.brand.filter.ast.Node.operation;
 import static org.assertj.core.api.Assertions.assertThat;
 

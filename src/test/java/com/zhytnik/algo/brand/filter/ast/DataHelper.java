@@ -5,7 +5,7 @@ import com.zhytnik.algo.brand.data.BinaryOperator;
 import com.zhytnik.algo.brand.data.Expression;
 import com.zhytnik.algo.brand.data.Variable;
 
-public class Data {
+public class DataHelper {
 
     private static int index = 0;
 

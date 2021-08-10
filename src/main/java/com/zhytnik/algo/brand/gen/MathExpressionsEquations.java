@@ -5,10 +5,11 @@ import com.google.common.collect.Sets;
 import com.google.common.math.LongMath;
 import com.zhytnik.algo.brand.compute.Transformation;
 import com.zhytnik.algo.brand.data.Expression;
-import com.zhytnik.algo.brand.data.Variable;
+import com.zhytnik.algo.brand.settings.FeatureSettings;
 import com.zhytnik.algo.brand.threshold.Threshold;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -20,14 +21,24 @@ import static com.zhytnik.algo.brand.gen.AllArithmeticPermutations.computeAllPer
 public class MathExpressionsEquations implements Transformation {
 
     private final int complexity;
-    private final Variable target;
+    private final Expression target;
     private final Threshold threshold;
+    private final boolean useSameValues;
 
-    public MathExpressionsEquations(Variable target, int complexity, Threshold threshold) {
+    public MathExpressionsEquations(Expression target, int complexity, Threshold threshold) {
+        this(target, complexity, threshold, FeatureSettings.defaultSettings());
+    }
+
+    public MathExpressionsEquations(Expression target, int complexity, Threshold threshold, FeatureSettings settings) {
+        this(target, complexity, threshold, settings.useSameValues());
+    }
+
+    public MathExpressionsEquations(Expression target, int complexity, Threshold threshold, boolean useSameValues) {
         if (complexity <= 0) {
             throw new IllegalArgumentException("Complexity should be positive! Actual is " + complexity);
         }
         this.complexity = complexity;
+        this.useSameValues = useSameValues;
         this.target = Objects.requireNonNull(target);
         this.threshold = Objects.requireNonNull(threshold);
     }
@@ -39,10 +50,9 @@ public class MathExpressionsEquations implements Transformation {
                 AllArithmeticPermutations.permutationsCount(complexity);
     }
 
-    //TODO(Zhytnik): filter unique or as is
     @Override
     public List<Expression> apply(List<Expression> source) {
-        var unique = uniqueValues(source);
+        var unique = useSameValues ? new HashSet<>(source) : uniqueValues(source);
 
         if (unique.size() < complexity) {
             return List.of();
@@ -55,10 +65,11 @@ public class MathExpressionsEquations implements Transformation {
 
     private Set<Expression> uniqueValues(List<Expression> source) {
         return source.stream()
-                .filter(var -> var.value() != target.value())
+                .filter(e -> e.value() != target.value())
                 .collect(Collectors.toSet());
     }
 
+    //TODO: add parallel execution
     @SuppressWarnings("UnstableApiUsage")
     private void generate(Set<Expression> source, Consumer<Expression> expressions) {
         for (var combination : Sets.combinations(source, complexity)) {
@@ -72,14 +83,16 @@ public class MathExpressionsEquations implements Transformation {
 
     private static final class ValidExpressions implements Consumer<Expression> {
 
+        private static final int DEFAULT_INITIAL_CAPACITY = 16_000;
+
         final double expected;
         final Threshold threshold;
         final List<Expression> verified;
 
-        ValidExpressions(Variable target, Threshold threshold) {
+        ValidExpressions(Expression target, Threshold threshold) {
             this.threshold = threshold;
             this.expected = target.value();
-            this.verified = new ArrayList<>(32_000);
+            this.verified = new ArrayList<>(DEFAULT_INITIAL_CAPACITY);
         }
 
         @Override
