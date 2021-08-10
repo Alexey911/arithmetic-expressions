@@ -10,15 +10,15 @@ import java.util.Objects;
 
 public final class MathErrorVerification implements Transformation {
 
-    private final double target;
+    private final double expected;
     private final Threshold similarity;
 
     public MathErrorVerification(Expression target, Threshold similarity) {
         this(target.value(), similarity);
     }
 
-    public MathErrorVerification(double target, Threshold similarity) {
-        this.target = target;
+    public MathErrorVerification(double expected, Threshold similarity) {
+        this.expected = expected;
         this.similarity = Objects.requireNonNull(similarity);
     }
 
@@ -29,11 +29,11 @@ public final class MathErrorVerification implements Transformation {
 
     @Override
     public List<Expression> apply(List<Expression> source) {
-        List<Expression> illegal = new ArrayList<>();
+        var illegal = new ArrayList<Expression>();
 
-        for (var expression : source) {
-            if (!similarity.isAcceptable(expression.value(), target)) {
-                illegal.add(expression);
+        for (var e : source) {
+            if (!similarity.isAcceptable(e.value(), expected)) {
+                illegal.add(e);
             }
         }
 

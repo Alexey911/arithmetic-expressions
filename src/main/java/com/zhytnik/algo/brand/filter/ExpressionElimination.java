@@ -19,25 +19,25 @@ public final class ExpressionElimination implements Transformation {
 
     private final int complexity;
     private final boolean groupElimination;
-    private final Threshold targetThreshold;
-    private final Threshold similarityThreshold;
+    private final Threshold similarity;
+    private final Threshold overallSimilarity;
 
-    public ExpressionElimination(int complexity, Threshold targetThreshold) {
-        this(complexity, targetThreshold, FeatureSettings.defaultSettings());
+    public ExpressionElimination(int complexity, Threshold overallSimilarity) {
+        this(complexity, overallSimilarity, FeatureSettings.defaultSettings());
     }
 
-    public ExpressionElimination(int complexity, Threshold targetThreshold, FeatureSettings settings) {
-        this(complexity, targetThreshold, settings.similarityThreshold(), settings.useGroupElimination());
+    public ExpressionElimination(int complexity, Threshold overallSimilarity, FeatureSettings settings) {
+        this(complexity, overallSimilarity, settings.similarityThreshold(), settings.useGroupElimination());
     }
 
-    public ExpressionElimination(int complexity, Threshold targetThreshold, Threshold similarityThreshold, boolean groupElimination) {
+    public ExpressionElimination(int complexity, Threshold overallSimilarity, Threshold similarity, boolean groupElimination) {
         if (complexity <= 0) {
             throw new IllegalArgumentException("Complexity should be positive! Actual is " + complexity);
         }
         this.complexity = complexity;
         this.groupElimination = groupElimination;
-        this.targetThreshold = Objects.requireNonNull(targetThreshold);
-        this.similarityThreshold = Objects.requireNonNull(similarityThreshold);
+        this.similarity = Objects.requireNonNull(similarity);
+        this.overallSimilarity = Objects.requireNonNull(overallSimilarity);
     }
 
     @Override
@@ -50,11 +50,11 @@ public final class ExpressionElimination implements Transformation {
         var invalid = new Counter();
         var valuable = new ArrayList<Expression>();
 
-        for (var expression : source) {
-            traverse(expression, expression, invalid);
+        for (var e : source) {
+            traverse(e, e, invalid);
 
             if (invalid.isZero()) {
-                valuable.add(expression);
+                valuable.add(e);
             } else {
                 invalid.reset();
             }
@@ -110,13 +110,13 @@ public final class ExpressionElimination implements Transformation {
     }
 
     private void tryToEliminate(Expression elimination, Expression replacement, Counter invalid, Expression source) {
-        if (similarityThreshold.isAcceptable(elimination.value(), replacement.value())) {
+        if (elimination.isUnary() && similarity.isAcceptable(elimination.value(), replacement.value())) {
             return;
         }
 
         var modified = source.recalculateWith(Map.of(elimination, replacement));
 
-        if (targetThreshold.isAcceptable(modified.value(), source.value())) {
+        if (overallSimilarity.isAcceptable(modified.value(), source.value())) {
             invalid.increment();
         }
     }

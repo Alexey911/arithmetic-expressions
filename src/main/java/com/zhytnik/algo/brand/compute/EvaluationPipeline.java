@@ -3,9 +3,9 @@ package com.zhytnik.algo.brand.compute;
 import com.zhytnik.algo.brand.data.Expression;
 import com.zhytnik.algo.brand.data.Variable;
 import com.zhytnik.algo.brand.filter.AstUniqueExpressions;
-import com.zhytnik.algo.brand.filter.UniqueExpressions;
-import com.zhytnik.algo.brand.filter.ValueFiltration;
-import com.zhytnik.algo.brand.filter.VariableElimination;
+import com.zhytnik.algo.brand.filter.CommutativeDuplicateRemoval;
+import com.zhytnik.algo.brand.filter.MathErrorVerification;
+import com.zhytnik.algo.brand.filter.ExpressionElimination;
 import com.zhytnik.algo.brand.gen.MathExpressionsEquations;
 import com.zhytnik.algo.brand.threshold.Threshold;
 
@@ -18,11 +18,11 @@ public class EvaluationPipeline {
 
     public EvaluationPipeline(Threshold acceptance, int complexity, Variable target) {
         steps = Arrays.asList(
-                new MathExpressionsEquations(complexity, target, acceptance),
-                new UniqueExpressions(),
-                new VariableElimination(complexity, acceptance),
+                new MathExpressionsEquations(target, complexity, acceptance),
+                new CommutativeDuplicateRemoval(complexity),
+                new ExpressionElimination(complexity, acceptance),
                 new AstUniqueExpressions(),
-                new ValueFiltration(target.value(), acceptance)
+                new MathErrorVerification(target, acceptance)
         );
     }
 

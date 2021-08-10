@@ -4,6 +4,7 @@ import com.zhytnik.algo.brand.compute.Transformation;
 import com.zhytnik.algo.brand.data.Expression;
 import com.zhytnik.algo.brand.filter.ast.AstNormalization;
 import com.zhytnik.algo.brand.filter.ast.Tree;
+import com.zhytnik.algo.brand.settings.FeatureSettings;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,7 +16,11 @@ public final class AstUniqueExpressions implements Transformation {
     private final AstNormalization normalization;
 
     public AstUniqueExpressions() {
-        this(new AstNormalization());
+        this(FeatureSettings.defaultSettings());
+    }
+
+    public AstUniqueExpressions(FeatureSettings settings) {
+        this(settings.normalization());
     }
 
     public AstUniqueExpressions(AstNormalization normalization) {
