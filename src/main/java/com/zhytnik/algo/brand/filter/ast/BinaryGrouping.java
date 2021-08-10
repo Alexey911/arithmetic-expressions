@@ -9,7 +9,7 @@ import static com.zhytnik.algo.brand.data.BinaryOperator.DIVISION;
 import static com.zhytnik.algo.brand.data.BinaryOperator.MULTIPLICATION;
 import static com.zhytnik.algo.brand.data.BinaryOperator.SUBTRACTION;
 
-final class BinaryGrouping implements UnaryOperator<Tree> {
+public final class BinaryGrouping implements UnaryOperator<Tree> {
 
     @Override
     public Tree apply(Tree tree) {

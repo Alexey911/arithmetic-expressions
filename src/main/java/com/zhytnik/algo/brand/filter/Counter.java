@@ -1,6 +1,6 @@
 package com.zhytnik.algo.brand.filter;
 
-public final class Counter {
+final class Counter {
 
     private int value;
 
@@ -13,7 +13,7 @@ public final class Counter {
     }
 
     public boolean isNonZero() {
-        return value == 0;
+        return value != 0;
     }
 
     public void reset() {

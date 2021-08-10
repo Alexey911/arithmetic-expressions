@@ -1,18 +1,19 @@
 package com.zhytnik.algo.brand.filter.ast;
 
 import com.zhytnik.algo.brand.data.Expression;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
 
-@AllArgsConstructor
+import java.util.Objects;
+
 public final class Tree {
 
-    @Getter
     Node root;
 
-    public Tree(@NonNull Expression expression) {
-        root = Node.toNode(expression);
+    public Tree(Expression expression) {
+        this(Node.toNode(expression));
+    }
+
+    public Tree(Node root) {
+        this.root = Objects.requireNonNull(root);
     }
 
     public Expression toExpression() {

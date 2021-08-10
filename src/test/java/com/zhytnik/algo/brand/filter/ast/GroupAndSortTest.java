@@ -11,7 +11,7 @@ import static com.zhytnik.algo.brand.filter.ast.Data.add;
 import static com.zhytnik.algo.brand.filter.ast.Data.multiple;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class CommutativeSortingTest {
+class GroupAndSortTest {
 
     @ParameterizedTest
     @MethodSource("arguments")
@@ -22,7 +22,7 @@ class CommutativeSortingTest {
     }
 
     String apply(Expression source) {
-        return new CommutativeSorting().apply(Data.tree(source)).toString();
+        return new GroupAndSort().apply(Data.tree(source)).toString();
     }
 
     static List<Arguments> arguments() {

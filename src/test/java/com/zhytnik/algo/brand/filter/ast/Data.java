@@ -7,12 +7,22 @@ import com.zhytnik.algo.brand.data.Variable;
 
 public class Data {
 
+    private static int index = 0;
+
+    public static Variable var(double value) {
+        return var(("v" + index++), value);
+    }
+
     public static Variable var(String name) {
-        return new Variable(name, 0d);
+        return var(name, 0d);
+    }
+
+    public static Variable var(String name, double value) {
+        return new Variable(name, value);
     }
 
     public static Tree tree(Expression expression) {
-        return Tree.toTree(expression);
+        return new Tree(expression);
     }
 
     public static BinaryOperation add(Object left, Object right) {
@@ -32,6 +42,12 @@ public class Data {
     }
 
     private static Expression exp(Object v) {
-        return v instanceof Expression ? (Expression) v : var(v.toString());
+        if (v instanceof Expression) {
+            return (Expression) v;
+        }
+        if (v instanceof Number) {
+            return var(((Number) v).doubleValue());
+        }
+        return var(v.toString());
     }
 }

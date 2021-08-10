@@ -4,12 +4,8 @@ import com.zhytnik.algo.brand.data.BinaryOperation;
 import com.zhytnik.algo.brand.data.BinaryOperator;
 import com.zhytnik.algo.brand.data.Expression;
 import com.zhytnik.algo.brand.data.Variable;
-import lombok.AllArgsConstructor;
 
-import static java.util.Objects.nonNull;
-
-@AllArgsConstructor
-public final class Node {
+final class Node {
 
     Node left;
     Node right;
@@ -17,36 +13,37 @@ public final class Node {
     final Variable variable;
     BinaryOperator operator;
 
+    private Node(Variable variable) {
+        this.variable = variable;
+    }
+
+    private Node(Node left, Node right, BinaryOperator operator) {
+        this.left = left;
+        this.right = right;
+        this.variable = null;
+        this.operator = operator;
+    }
+
     boolean isVariable() {
-        return nonNull(variable);
+        return variable != null;
     }
 
     boolean isOperation() {
-        return nonNull(operator);
+        return operator != null;
     }
 
     int variables() {
         return variables(this);
     }
 
-    void swapSides() {
-        var tmp = left;
-        left = right;
-        right = tmp;
-    }
-
-    public void setLeft(Node left) {
-        this.left = left;
-    }
-
-    public void setRight(Node right) {
-        this.right = right;
-    }
-
     StringBuilder description() {
         var sb = new StringBuilder();
         print(this, sb);
         return sb;
+    }
+
+    public Expression toExpression() {
+        return toExpression(this);
     }
 
     @Override
@@ -58,16 +55,12 @@ public final class Node {
         return node.isVariable() ? node.toString() : "(" + node.toString() + ")";
     }
 
-    public Expression toExpression() {
-        return toExpression(this);
-    }
-
     static Node variable(Variable variable) {
-        return new Node(null, null, variable, null);
+        return new Node(variable);
     }
 
     static Node operation(Node left, Node right, BinaryOperator operator) {
-        return new Node(left, right, null, operator);
+        return new Node(left, right, operator);
     }
 
     static Node toNode(Expression expression) {
@@ -88,6 +81,15 @@ public final class Node {
         return node.isVariable() ? 1 : variables(node.left) + variables(node.right);
     }
 
+    private static void print(Node node, StringBuilder target) {
+        if (node.isVariable()) {
+            target.append(node.variable.formatted());
+        } else {
+            print(node.left, target);
+            print(node.right, target);
+        }
+    }
+
     private static Expression toExpression(Node node) {
         if (node.isVariable()) {
             return node.variable;
@@ -97,15 +99,6 @@ public final class Node {
                     toExpression(node.right),
                     node.operator
             );
-        }
-    }
-
-    private static void print(Node node, StringBuilder target) {
-        if (node.isVariable()) {
-            target.append(node.variable.formatted());
-        } else {
-            print(node.left, target);
-            print(node.right, target);
         }
     }
 }

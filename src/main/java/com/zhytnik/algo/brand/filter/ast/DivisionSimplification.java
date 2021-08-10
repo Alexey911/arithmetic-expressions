@@ -5,7 +5,7 @@ import java.util.function.UnaryOperator;
 import static com.zhytnik.algo.brand.data.BinaryOperator.DIVISION;
 import static com.zhytnik.algo.brand.data.BinaryOperator.MULTIPLICATION;
 
-final class DivisionSimplification implements UnaryOperator<Tree> {
+public final class DivisionSimplification implements UnaryOperator<Tree> {
 
     @Override
     public Tree apply(Tree tree) {

@@ -11,12 +11,12 @@ import static com.zhytnik.algo.brand.filter.ast.Data.var;
 import static com.zhytnik.algo.brand.filter.ast.Node.operation;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class NodeComparatorTest {
+class DefaultNodeComparatorTest {
 
     @ParameterizedTest
     @MethodSource("arguments")
     void compares(Node x, Node y, int expected) {
-        assertThat(NodeComparator.INSTANCE.compare(x, y)).isEqualTo(expected);
+        assertThat(DefaultNodeComparator.INSTANCE.compare(x, y)).isEqualTo(expected);
     }
 
     static List<Arguments> arguments() {

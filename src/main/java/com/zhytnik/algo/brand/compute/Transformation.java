@@ -6,6 +6,4 @@ import java.util.List;
 import java.util.function.UnaryOperator;
 
 public interface Transformation extends UnaryOperator<List<Expression>>, FiniteComputations {
-
-    long complexity(int outputSize);
 }

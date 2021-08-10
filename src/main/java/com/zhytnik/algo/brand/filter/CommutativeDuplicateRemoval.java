@@ -3,7 +3,6 @@ package com.zhytnik.algo.brand.filter;
 import com.zhytnik.algo.brand.compute.Transformation;
 import com.zhytnik.algo.brand.data.BinaryOperation;
 import com.zhytnik.algo.brand.data.Expression;
-import lombok.AllArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -11,20 +10,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@AllArgsConstructor
-public class UniqueExpressions implements Transformation {
+public final class CommutativeDuplicateRemoval implements Transformation {
 
     private final int complexity;
 
+    public CommutativeDuplicateRemoval(int complexity) {
+        if (complexity <= 0) {
+            throw new IllegalArgumentException("Complexity should be positive! Actual is " + complexity);
+        }
+        this.complexity = complexity;
+    }
+
     @Override
     public long complexity(int outputSize) {
-        return Math.multiplyFull(outputSize, complexity - 1);
+        return Math.multiplyFull(outputSize, complexity);
     }
 
     @Override
     public List<Expression> apply(List<Expression> source) {
-        Set<Expression> ignore = new HashSet<>();
-        Set<Expression> unique = new HashSet<>(source);
+        var unique = new HashSet<>(source);
+        var ignore = new HashSet<Expression>();
 
         for (var expression : source) {
             removeEquivalents(expression, expression, unique, ignore);

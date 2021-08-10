@@ -3,7 +3,9 @@ package com.zhytnik.algo.brand.filter.ast;
 import com.zhytnik.algo.brand.data.BinaryOperator;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.UnaryOperator;
 
 import static com.zhytnik.algo.brand.data.BinaryOperator.SUBTRACTION;
@@ -11,7 +13,17 @@ import static com.zhytnik.algo.brand.data.BinaryOperator.SUBTRACTION;
 /**
  * Groups expressions to the groups of the maximum possible size and sorts them according to their sizes and variables' names.
  */
-final class GroupAndSort implements UnaryOperator<Tree> {
+public final class GroupAndSort implements UnaryOperator<Tree> {
+
+    private final Comparator<Node> comparator;
+
+    public GroupAndSort() {
+        this(DefaultNodeComparator.INSTANCE);
+    }
+
+    public GroupAndSort(Comparator<Node> comparator) {
+        this.comparator = Objects.requireNonNull(comparator);
+    }
 
     @Override
     public Tree apply(Tree tree) {
@@ -46,7 +58,7 @@ final class GroupAndSort implements UnaryOperator<Tree> {
     }
 
     private List<Node> toCommutativeOperandList(Node variable) {
-        List<Node> operands = new ArrayList<>();
+        var operands = new ArrayList<Node>();
 
         operands.add(variable);
         return operands;
@@ -66,7 +78,7 @@ final class GroupAndSort implements UnaryOperator<Tree> {
     }
 
     private Node sortAndGroup(List<Node> operands, BinaryOperator operator) {
-        operands.sort(NodeComparator.INSTANCE);
+        operands.sort(comparator);
 
         return group(operands, operator, 0, operands.size());
     }

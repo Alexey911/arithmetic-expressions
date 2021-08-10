@@ -7,9 +7,9 @@ import java.util.Comparator;
  * Expressions with more variables are greater.
  * In case of the same size expressions, they are compared according to names of variables in the ascending order.
  */
-public final class NodeComparator implements Comparator<Node> {
+public final class DefaultNodeComparator implements Comparator<Node> {
 
-    public static final NodeComparator INSTANCE = new NodeComparator();
+    public static final DefaultNodeComparator INSTANCE = new DefaultNodeComparator();
 
     @Override
     public int compare(Node x, Node y) {

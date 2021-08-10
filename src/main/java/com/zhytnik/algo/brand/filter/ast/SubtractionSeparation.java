@@ -8,7 +8,7 @@ import static com.zhytnik.algo.brand.data.BinaryOperator.SUBTRACTION;
 /**
  * Tries to move subtractions out of other operations.
  */
-final class SubtractionSeparation implements UnaryOperator<Tree> {
+public final class SubtractionSeparation implements UnaryOperator<Tree> {
 
     @Override
     public Tree apply(Tree tree) {
