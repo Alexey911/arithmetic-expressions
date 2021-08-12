@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
 
 import static com.zhytnik.algo.brand.gen.AllArithmeticPermutations.computeAllPermutations;
 
+//TODO: generate permutations and then remove duplicates
+
 public class MathExpressionsEquations implements Transformation {
 
     private final int complexity;
@@ -41,6 +43,11 @@ public class MathExpressionsEquations implements Transformation {
         this.useSameValues = useSameValues;
         this.target = Objects.requireNonNull(target);
         this.threshold = Objects.requireNonNull(threshold);
+    }
+
+    @Override
+    public String shortName() {
+        return "Building";
     }
 
     @Override

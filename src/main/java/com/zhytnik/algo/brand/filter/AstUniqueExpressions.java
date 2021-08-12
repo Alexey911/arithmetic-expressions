@@ -28,6 +28,11 @@ public final class AstUniqueExpressions implements Transformation {
     }
 
     @Override
+    public String shortName() {
+        return "AST";
+    }
+
+    @Override
     public long complexity(int sourceSize) {
         return Math.multiplyFull(sourceSize, normalization.stepCount());
     }

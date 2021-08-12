@@ -36,14 +36,21 @@ public final class Node {
         return variables(this);
     }
 
-    StringBuilder description() {
+    StringBuilder description(String spliterator) {
         var sb = new StringBuilder();
-        print(this, sb);
+        print(this, sb, spliterator);
+        sb.delete(sb.length() - spliterator.length(), sb.length());
         return sb;
     }
 
     Expression toExpression() {
         return toExpression(this);
+    }
+
+    void swapSides() {
+        var tmp = left;
+        left = right;
+        right = tmp;
     }
 
     @Override
@@ -81,12 +88,12 @@ public final class Node {
         return node.isVariable() ? 1 : variables(node.left) + variables(node.right);
     }
 
-    private static void print(Node node, StringBuilder target) {
+    private static void print(Node node, StringBuilder target, String spliterator) {
         if (node.isVariable()) {
-            target.append(node.variable.formatted());
+            target.append(node.variable.formatted()).append(spliterator);
         } else {
-            print(node.left, target);
-            print(node.right, target);
+            print(node.left, target, spliterator);
+            print(node.right, target, spliterator);
         }
     }
 

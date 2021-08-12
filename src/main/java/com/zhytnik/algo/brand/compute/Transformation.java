@@ -6,4 +6,6 @@ import java.util.List;
 import java.util.function.UnaryOperator;
 
 public interface Transformation extends UnaryOperator<List<Expression>>, FiniteComputations {
+
+    String shortName();
 }

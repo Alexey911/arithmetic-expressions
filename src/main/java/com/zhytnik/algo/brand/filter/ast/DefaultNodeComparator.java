@@ -20,8 +20,8 @@ public final class DefaultNodeComparator implements Comparator<Node> {
             return Integer.compare(right, left);
         }
 
-        var l = x.description();
-        var r = y.description();
+        var l = x.description("");
+        var r = y.description("");
 
         if (l.length() != r.length()) {
             return Integer.compare(r.length(), l.length());

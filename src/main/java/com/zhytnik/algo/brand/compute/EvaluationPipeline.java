@@ -23,9 +23,9 @@ public class EvaluationPipeline {
     public EvaluationPipeline(Threshold acceptance, int complexity, Expression target, FeatureSettings settings) {
         steps = Arrays.asList(
                 new MathExpressionsEquations(target, complexity, acceptance, settings),
-                new CommutativeDuplicateRemoval(complexity),
-                new ExpressionElimination(complexity, acceptance),
-                new AstUniqueExpressions(),
+                asLogging(new CommutativeDuplicateRemoval(complexity)),
+                asLogging(new ExpressionElimination(complexity, acceptance, settings)),
+                asLogging(new AstUniqueExpressions(settings)),
                 new MathErrorVerification(target, acceptance)
         );
     }
@@ -46,5 +46,9 @@ public class EvaluationPipeline {
             result = step.apply(result);
         }
         return result;
+    }
+
+    private Transformation asLogging(Transformation source) {
+        return new LoggingTransformation(source);
     }
 }

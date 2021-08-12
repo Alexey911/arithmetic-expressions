@@ -41,6 +41,11 @@ public final class ExpressionElimination implements Transformation {
     }
 
     @Override
+    public String shortName() {
+        return "Elimination";
+    }
+
+    @Override
     public long complexity(int sourceSize) {
         return Math.multiplyFull(complexity, sourceSize);
     }

@@ -23,6 +23,11 @@ public final class MathErrorVerification implements Transformation {
     }
 
     @Override
+    public String shortName() {
+        return "Verification";
+    }
+
+    @Override
     public long complexity(int sourceSize) {
         return sourceSize;
     }

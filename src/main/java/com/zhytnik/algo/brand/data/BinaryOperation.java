@@ -65,10 +65,8 @@ public final class BinaryOperation implements Expression {
     }
 
     private Expression recalculate(Expression source, Map<? extends Expression, ? extends Expression> replacements) {
-        if (replacements.containsKey(source)) {
-            return replacements.get(source);
-        }
-        return source.recalculateWith(replacements);
+        var r = replacements.get(source);
+        return (r != null) ? r : source.recalculateWith(replacements);
     }
 
     @Override

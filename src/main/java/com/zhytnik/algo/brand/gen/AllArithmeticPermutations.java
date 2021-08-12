@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import java.util.List;
 
 @AllArgsConstructor
-final class AllArithmeticPermutations {
+public final class AllArithmeticPermutations {
 
     private static final int[] EXPECTED_SIZE = {0, 0, 4, 32, 320, 3584, 43_008, 540_672, 7_028_736};
 

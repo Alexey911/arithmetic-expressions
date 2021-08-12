@@ -17,10 +17,8 @@ public final class AstNormalization implements UnaryOperator<Tree> {
         this(settings.nodeComparator());
     }
 
-    //TODO: check if binary grouping is worth it
     public AstNormalization(Comparator<Node> nodeComparator) {
         this(
-                new BinaryGrouping(),
                 new SubtractionSeparation(),
                 new DivisionSimplification(),
                 new SignSimplification(),

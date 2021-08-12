@@ -22,6 +22,11 @@ public final class CommutativeDuplicateRemoval implements Transformation {
     }
 
     @Override
+    public String shortName() {
+        return "Deduplication";
+    }
+
+    @Override
     public long complexity(int outputSize) {
         return Math.multiplyFull(outputSize, complexity);
     }
