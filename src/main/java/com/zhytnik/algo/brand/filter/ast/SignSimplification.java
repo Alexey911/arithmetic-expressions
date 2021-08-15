@@ -1,5 +1,9 @@
 package com.zhytnik.algo.brand.filter.ast;
 
+import com.zhytnik.algo.brand.data.BinaryOperator;
+
+import java.util.Comparator;
+import java.util.Objects;
 import java.util.function.UnaryOperator;
 
 import static com.zhytnik.algo.brand.data.BinaryOperator.DIVISION;
@@ -8,9 +12,16 @@ import static com.zhytnik.algo.brand.data.BinaryOperator.SUBTRACTION;
 
 public final class SignSimplification implements UnaryOperator<Tree> {
 
-    private static final String SPLITERATOR = ",";
+    private final Comparator<Node> comparator;
 
-    //TODO(zhytnik): revert when related to internal
+    public SignSimplification() {
+        this(SubtractionNodeComparator.INSTANCE);
+    }
+
+    public SignSimplification(Comparator<Node> comparator) {
+        this.comparator = Objects.requireNonNull(comparator);
+    }
+
     @Override
     public Tree apply(Tree tree) {
         traverse(tree.root);
@@ -22,53 +33,42 @@ public final class SignSimplification implements UnaryOperator<Tree> {
             return;
         }
 
-        if ((node.operator == MULTIPLICATION || node.operator == DIVISION) &&
-                node.left.operator == SUBTRACTION && node.right.operator == SUBTRACTION) {
-            tryToSimplify(node);
+        if (isSignNeutralOperator(node.operator)) {
+            var left = biggestSubtraction(node.left);
+            var right = biggestSubtraction(node.right);
+
+            if (left == null && right == null) {
+                return;
+            }
+            if (left != null & right != null && comparator.compare(left, right) > 0) {
+                swap(left, right);
+            }
         }
 
         traverse(node.left);
         traverse(node.right);
     }
 
-    private void tryToSimplify(Node node) {
-        int leftLength = node.left.left.variables() + node.right.left.variables();
-        int rightLength = node.left.right.variables() + node.right.right.variables();
+    private Node biggestSubtraction(Node node) {
+        var op = node.operator;
 
-        if (leftLength < rightLength) {
-            swap(node);
-        } else if (leftLength == rightLength) {
-            var left = concat(node.left.left, node.right.left);
-            var right = concat(node.left.right, node.right.right);
-
-            if (left.length() < right.length() || (left.length() == right.length() && toScore(left) > toScore(right))) {
-                swap(node);
-            }
+        if (op == SUBTRACTION) {
+            return node;
         }
-    }
-
-    private StringBuilder concat(Node first, Node second) {
-        return first.description(SPLITERATOR).append(SPLITERATOR).append(second.description(SPLITERATOR));
-    }
-
-    private double toScore(StringBuilder description) {
-        double score = 1;
-
-        var variables = description.toString().split(SPLITERATOR);
-
-        for (var variable : variables) {
-            int sum = 0;
-
-            for (int i = 0, size = variable.length(); i < size; i++) {
-                sum += variable.charAt(i);
-            }
-            score *= sum;
+        if (isSignNeutralOperator(op)) {
+            var left = biggestSubtraction(node.left);
+            var right = biggestSubtraction(node.right);
+            return (left != null && (right == null || comparator.compare(left, right) < 0)) ? left : right;
         }
-        return score;
+        return null;
     }
 
-    private void swap(Node node) {
-        node.left.swapSides();
-        node.right.swapSides();
+    private boolean isSignNeutralOperator(BinaryOperator operator) {
+        return operator == MULTIPLICATION || operator == DIVISION;
+    }
+
+    private void swap(Node left, Node right) {
+        left.swapSides();
+        right.swapSides();
     }
 }

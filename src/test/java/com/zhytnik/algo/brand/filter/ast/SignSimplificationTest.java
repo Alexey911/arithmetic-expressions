@@ -33,7 +33,10 @@ class SignSimplificationTest {
                 Arguments.of(div(sub("d", "a"), sub("b", "c")), "(a-d)/(c-b)"),
                 Arguments.of(div(sub("c", "b"), sub("a", "d")), "(c-b)/(a-d)"),
                 Arguments.of(div(sub("b", "c"), sub("d", "a")), "(c-b)/(a-d)"),
-                Arguments.of(sub("k", multiple(sub("d", "a"), sub("b", "c"))), "k-((a-d)*(c-b))")
+                Arguments.of(sub("k", multiple(sub("d", "a"), sub("b", "c"))), "k-((a-d)*(c-b))"),
+                Arguments.of(div(multiple(sub("a", "b"), "k"), sub("n", "c")), "((b-a)*k)/(c-n)"),
+                Arguments.of(div(multiple(sub("b", "a"), "k"), sub("c", "n")), "((b-a)*k)/(c-n)"),
+                Arguments.of(div(multiple(sub("a", "b"), sub("d", "c")), sub("k", "e")), "((a-b)*(c-d))/(e-k)")
         );
     }
 }
