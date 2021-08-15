@@ -1,2 +1,2 @@
-[![Build Status](https://travis-ci.org/Alexey911/arithmetic-expressions.png?branch=master)](https://travis-ci.org/Alexey911/arithmetic-expressions)
+[![Build Status](https://travis-ci.com/Alexey911/arithmetic-expressions.png?branch=master)](https://travis-ci.com/Alexey911/arithmetic-expressions)
 [![Coverage Status](https://coveralls.io/repos/github/Alexey911/arithmetic-expressions/badge.svg?branch=master)](https://coveralls.io/github/Alexey911/arithmetic-expressions?branch=master)
