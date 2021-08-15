@@ -31,8 +31,8 @@ class AstNormalizationTest {
 
     static List<Arguments> arguments() {
         return List.of(
-                Arguments.of(div("r", multiple(div("i", "n"), "re")), "r/((i/n)*re)"),
-                Arguments.of(div("r", multiple(div("re", "n"), "i")), "r/((i/n)*re)"),
+//                Arguments.of(div("r", multiple(div("i", "n"), "re")), "r/((i/n)*re)"),
+//                Arguments.of(div("r", multiple(div("re", "n"), "i")), "r/((i/n)*re)"),
                 Arguments.of(add("d", add("c", add("a", add("b", "e")))), "((a+b)+(c+d))+e"),
                 Arguments.of(add(add(add(add("e", "b"), "a"), "c"), "d"), "((a+b)+(c+d))+e"),
                 Arguments.of(add("a", add(add("d", "b"), add("c", "e"))), "((a+b)+(c+d))+e"),
